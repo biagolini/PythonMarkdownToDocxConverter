@@ -4,8 +4,18 @@ import pypandoc
 
 def convert_md_to_docx(input_md, output_docx):
     # Converts the Markdown file to DOCX using pypandoc
-    output = pypandoc.convert_file(input_md, 'docx', outputfile=output_docx)
-    return output
+    try:
+        output = pypandoc.convert_file(input_md, 'docx', outputfile=output_docx)
+        return output
+    except Exception as e:
+        print(f"Error during conversion: {e}")
+        sys.exit(1)
+
+def remove_md_extension(filename):
+    # Removes the .md extension if it's present
+    if filename.lower().endswith(".md"):
+        return filename[:-3]
+    return filename
 
 def main():
     # Checks if the argument was passed
@@ -13,10 +23,10 @@ def main():
         print("Usage: python3 main.py 'FILENAME'")
         sys.exit(1)
     
-    # Gets the file name without extension
-    file_name = sys.argv[1]
+    # Gets the file name and removes .md extension if necessary
+    file_name = remove_md_extension(sys.argv[1])
 
-    # Defines the markdown and docx file names, in the same folder as the script or the provided path
+    # Defines the markdown and docx file names
     input_md = f"{file_name}.md"
     output_docx = f"{file_name}.docx"
 
